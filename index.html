@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes & Verses</title>
+    <style>
+        /* --- CSS: The Vibe --- */
+        :root {
+            --bg-color: #1a1a1a;
+            --text-main: #e0e0e0;
+            --accent: #d4a373; /* Gold/Bronze for highlights */
+            --card-bg: #262626;
+            --font-title: 'Merriweather', serif; /* English Titles */
+            --font-poem: 'Tiro Devanagari Hindi', serif; /* Hindi/Hinglish Body */
+            --font-ui: 'Helvetica Neue', sans-serif; /* UI Elements */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-ui);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 40px 0;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-family: var(--font-title);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 10px 20px;
+        }
+
+        .nav-btn.active {
+            color: var(--accent);
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .nav-btn:hover {
+            color: var(--text-main);
+        }
+
+        /* Content Areas */
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Poetry Specific Styles */
+        .chapter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chapter-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-left 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .chapter-card:hover {
+            transform: translateX(5px);
+            border-left: 4px solid var(--accent);
+        }
+
+        .chapter-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            font-family: var(--font-title);
+        }
+
+        /* Poem Display */
+        .poem-container {
+            display: none; /* Hidden until a chapter is clicked */
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid #444;
+            color: #888;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .poem-block {
+            margin-bottom: 10px;
+            padding: 20px 10px;
+            text-align: center; /* Center align the poems */
+        }
+
+        .poem-title {
+            color: var(--accent);
+            font-family: var(--font-title);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-transform: capitalize;
+        }
+
+        .poem-body {
+            font-family: var(--font-poem);
+            line-height: 2.0; /* Good spacing for Hindi/Poetry */
+            font-size: 1.1rem;
+            white-space: pre-wrap; /* Preserves your line breaks */
+            color: #ccc;
+        }
+
+        /* The Beautiful Divider Line */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 40px auto;
+            width: 60%;
+            opacity: 0.5;
+        }
+
+        /* Hide divider after the last poem */
+        .poem-block:last-child .divider {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;1,400&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>My Anthology</h1>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="showSection('stories')">Stories</button>
+        <button class="nav-btn" onclick="showSection('poetry')">Poetries</button>
+    </div>
+
+    <div id="stories" class="section active">
+        <div class="chapter-card" style="cursor: default;">
+            <div class="chapter-title">Coming Soon...</div>
+            <p style="margin-top:10px; color:#888;">Short stories will appear here.</p>
+        </div>
+    </div>
+
+    <div id="poetry" class="section">
+        
+        <div id="chapter-view" class="chapter-list">
+            </div>
+
+        <div id="poem-view" class="poem-container">
+            <button class="back-btn" onclick="backToChapters()">← Back to Chapters</button>
+            
+            <h2 id="current-chapter-title" style="margin-bottom: 10px; color: #fff; font-family: var(--font-title); text-align:center;"></h2>
+            <div style="width: 50px; height: 2px; background: var(--accent); margin: 0 auto 40px auto;"></div>
+
+            <div id="poem-list">
+                </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* =========================================
+       DATA SECTION - YOUR POEMS 
+       =========================================
+    */
+    const anthology = [
+        {
+            title: "1. Mother dairy to her princess",
+            poems: [
+                { 
+                    title: "Roti", 
+                    content: "ग़म के तवे में, सपनो की रोटी सेंकती है\nमाँ, अब अपनी बेटी के आँखों से सपने देखती है" 
+                },
+                { 
+                    title: "Beti Meri", 
+                    content: "देखती हूँ तुझपे अक्स अपना\nवही मुस्कान , वही सब को अपना समझना\nऔर यही देख कर डर जाती हूँ,\nकहीं तू मेरे सी बन कर न रह जाये" 
+                },
+                { 
+                    title: "More", 
+                    content: "Coming Soon..." 
+                }
+            ]
+        },
+        {
+            title: "2. The essence of falling in love",
+            poems: [
+                { 
+                    title: "Palak", 
+                    content: "मेरी सामने से ज़माने गुज़रे\nएक तितली उडी , कुछ फूल खिले\nवक़्त रुका, धड़कन बढ़ी\nमहसूस हुई एक रिहाई सी\nअब भी सोचता हूँ ऐसा क्या था\nउसने तो बस पलकें झपकाई थी" 
+                },
+                { 
+                    title: "Something", 
+                    content: "Coming Soon..." 
+                }
+            ]
+        },
+        {
+            title: "3. Yeah I will bounce back",
+            poems: [
+                { 
+                    title: "Loading...", 
+                    content: "Coming Soon..." 
+                }
+            ]
+        },
+        {
+            title: "4. The wave of sadness",
+            poems: [
+                { 
+                    title: "Umeed", 
+                    content: "Coming Soon..." 
+                },
+                { 
+                    title: "More", 
+                    content: "Coming Soon..." 
+                }
+            ]
+        },
+        {
+            title: "5. Yeah, i moved on, but..",
+            poems: [
+                { 
+                    title: "अनकहे दर्द", 
+                    content: "कुछ अनकहे दर्द अनकहे रह गए,\nकुछ दर्द तोड़ गए हम, कुछ हम सह गए\nकुछ रह गए आँख में, कुछ आंसू बह गए\nजीना तो नहीं हुआ बाद तुम्हारे,\nबस ज़िंदा रहना था, ज़िंदा रह गए" 
+                },
+                { 
+                    title: "इम्तेहान", 
+                    content: "इम्तेहान यूँ न लो मेरी आशिक़ी का,\nमैं टूट जाऊँ तुझे जोड़ते-जोड़ते" 
+                },
+                { 
+                    title: "एक गलती", 
+                    content: "एक वो सदमा फिर आँखों पर से गुज़रता है,\nएक वो मैं फिर से संभलता हुआ गिर जाता हूँ\nएक चोट फिर उमड़ आती है, जब हमारी पुरानी तस्वीर नज़र आती है\nएक वो तेरी हँसी जो देखी नहीं अरसे से,\nएक तू जो देख कर हमें मुकर जाती है,\nसुना है तुम भी पढ़ के लिखा मेरा मुस्कुरा देती हो\nऔर कुछ इस तरह मेरी एक और गलती सुधर जाती है" 
+                },
+                { 
+                    title: "More", 
+                    content: "Coming Soon..." 
+                }
+            ]
+        }
+    ];
+
+    /* =========================================
+       LOGIC SECTION
+       =========================================
+    */
+
+    const chapterView = document.getElementById('chapter-view');
+    const poemView = document.getElementById('poem-view');
+    const poemList = document.getElementById('poem-list');
+    const chapterTitleDisplay = document.getElementById('current-chapter-title');
+
+    // Render Chapter List
+    anthology.forEach((chapter, index) => {
+        const card = document.createElement('div');
+        card.className = 'chapter-card';
+        card.innerHTML = `<div class="chapter-title">${chapter.title}</div><div style="font-size:0.8rem; color:#666; margin-top:5px;">${chapter.poems.length} Poems</div>`;
+        card.onclick = () => openChapter(index);
+        chapterView.appendChild(card);
+    });
+
+    function showSection(sectionId) {
+        // UI Toggles
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+        document.getElementById(sectionId).classList.add('active');
+        
+        const btnIndex = sectionId === 'stories' ? 0 : 1;
+        document.getElementsByClassName('nav-btn')[btnIndex].classList.add('active');
+
+        if(sectionId === 'poetry') backToChapters();
+    }
+
+    function openChapter(index) {
+        const chapterData = anthology[index];
+        
+        chapterView.style.display = 'none';
+        poemView.style.display = 'block';
+        chapterTitleDisplay.textContent = chapterData.title;
+        poemList.innerHTML = '';
+
+        chapterData.poems.forEach(poem => {
+            const div = document.createElement('div');
+            div.className = 'poem-block';
+            // Includes the beautiful divider
+            div.innerHTML = `
+                <div class="poem-title">${poem.title}</div>
+                <div class="poem-body">${poem.content}</div>
+                <div class="divider"></div>
+            `;
+            poemList.appendChild(div);
+        });
+    }
+
+    function backToChapters() {
+        poemView.style.display = 'none';
+        chapterView.style.display = 'flex'; 
+    }
+</script>
+
+</body>
+</html>
